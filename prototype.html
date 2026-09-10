@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#c8dce5" />
+    <meta name="description" content="An interactive 3D Shinkansen journey along the real Shin-Fuji railway. Ride, slow down, and explore Fuji City." />
+    <title>Shinkansen — A journey through Japan</title>
+    <style>
+      html,body{margin:0;background:#dce6e8} [hidden]{display:none!important}
+      body:not(.journey-entered) .header,body:not(.journey-entered) .deck{visibility:hidden}
+      #loading{position:fixed;inset:0;z-index:10;background:#dce6e8;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box}
+      .train-preview{width:min(900px,90vw);margin:0 0 34px}.train-preview img{display:block;width:100%;height:auto;aspect-ratio:12/5;object-fit:contain}
+      .loading-brand{position:absolute;top:28px;left:2.7%;display:flex;align-items:center;gap:17px;color:#09264d}.loading-brand .sun{width:25px;height:25px;border-radius:50%;background:#c72f3b}.loading-brand .wordmark{font:23px Georgia,serif;letter-spacing:.28em}
+      #loading-progress{position:relative;width:min(280px,65vw);height:1px;background:#18344826;margin:8px 0}#loading-progress::before{content:'';position:absolute;inset:0 auto 0 0;width:var(--progress,0%);background:#18344870}#loading-progress::after{content:'';position:absolute;left:var(--progress,0%);top:50%;width:9px;height:9px;background:#c72f3b;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 5px #c72f3b09}#loading-message{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+      @media(max-width:640px){.loading-brand{top:22px;left:6%;gap:9px}.loading-brand .sun{width:15px;height:15px}.loading-brand .wordmark{font-size:15px;letter-spacing:.19em}}
+    </style>
+    <style>.loading-brand{min-height:43px}.loading-brand .wordmark{line-height:1.3}@media(max-width:640px){.loading-brand{min-height:0}}@media(max-height:650px) and (min-width:641px){.loading-brand{top:15px}}</style>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='18' fill='%23c72f3b'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <main id="experience" aria-label="Interactive Shinkansen journey">
+      <div id="scene" role="img" aria-label="Ten-car Shinkansen travelling along the real Shin-Fuji railway"></div>
+      <header class="header">
+        <div class="brand"><span class="sun" aria-hidden="true"></span><div><span class="wordmark">SHINKANSEN</span><span class="brand-sub">A journey through Japan</span></div></div>
+        <div class="header-actions"><button id="sound" class="icon-button" aria-label="Enable sound" aria-pressed="false" title="Enable sound"></button></div>
+      </header>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <section class="deck" aria-label="Journey controls">
+        <div class="transport">
+          <button id="play" class="play-button" aria-label="Pause journey"></button>
+          <div class="telemetry"><span id="status">DEPARTING</span><div><span id="speed-value">0</span><span id="speed-unit">km/h</span></div></div>
+          <div class="speed-control fixed-speed"><span>CRUISING SPEED</span><strong>300 <small>km/h</small></strong></div>
+          <div class="cameras" aria-label="Camera view"><button data-camera="follow" aria-pressed="true">Follow</button><button data-camera="scenic" aria-pressed="false">Scenic</button><button data-camera="trackside" aria-pressed="false">Trackside</button></div>
+          <button id="restart" class="icon-button restart" aria-label="Restart journey" title="Restart journey"></button>
+        </div>
+        <nav class="route" aria-label="Journey stops"><div class="route-line"><div id="route-fill"></div></div><button data-chapter="0"><i></i><span>Departure</span></button><button data-chapter="1"><i></i><span>Suburbs</span></button><button data-chapter="2"><i></i><span>Mount Fuji</span></button><button data-chapter="3"><i></i><span>Tunnel</span></button><button data-chapter="4"><i></i><span>Beyond</span></button></nav>
+        <footer class="deck-footer"><label class="quality-label">Graphics <select id="quality" aria-label="Graphics quality"><option value="auto">Auto</option><option value="high">High</option><option value="low">Low</option></select></label><span>An imagined journey along the Tokaido.</span></footer>
+      </section>
+      <div id="loading" class="loading journey-loading"><div class="loading-brand"><span class="sun" aria-hidden="true"></span><span class="wordmark">SHINKANSEN</span></div><figure class="train-preview"><img src="/assets/train-preview.png" width="1200" height="500" alt="Shinkansen train" fetchpriority="high"></figure><div id="loading-progress" role="progressbar" aria-label="Journey loading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><p id="loading-message" role="status">Preparing the journey</p><button id="retry" hidden>Try again</button></div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

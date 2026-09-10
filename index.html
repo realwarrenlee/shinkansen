@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#dce6e8" />
+    <meta
+      name="description"
+      content="A scenic ten-car Shinkansen ride along the real Shin-Fuji railway, with open terrain, imagery and buildings."
+    />
+    <title>Shinkansen</title>
+    <!-- Render-blocking styles keep the initial loader consistent before JavaScript. -->
+    <link rel="stylesheet" href="/src/style.css" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='18' fill='%23c72f3b'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <main id="experience" aria-label="Interactive Shinkansen journey">
+      <div
+        id="scene"
+        role="img"
+        aria-busy="true"
+        aria-label="Ten-car Shinkansen travelling along the real Shin-Fuji railway"
+      ></div>
+      <header class="header" inert>
+        <div class="brand">
+          <span class="sun" aria-hidden="true"></span
+          ><span class="wordmark">SHINKANSEN</span>
+        </div>
+        <button
+          id="sound"
+          class="icon-button"
+          aria-label="Enable sound"
+          aria-pressed="false"
+        ></button>
+      </header>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <section class="deck" aria-label="Journey controls" inert>
+        <button
+          id="play"
+          class="play-button"
+          aria-label="Pause journey"
+        ></button>
+        <div class="telemetry">
+          <span id="status">DEPARTING</span>
+          <div>
+            <span id="speed-value">0</span><span id="speed-unit">km/h</span>
+          </div>
+        </div>
+      </section>
+      <div id="loading" class="loading">
+        <div class="loading-brand">
+          <span class="sun" aria-hidden="true"></span
+          ><span class="wordmark">SHINKANSEN</span>
+        </div>
+        <figure class="train-preview">
+          <img
+            src="/assets/train-preview.png"
+            width="1200"
+            height="500"
+            alt="Shinkansen train"
+            fetchpriority="high"
+          />
+        </figure>
+        <div
+          id="loading-progress"
+          role="progressbar"
+          aria-label="Journey loading"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        ></div>
+        <p id="loading-message" class="sr-only" role="status">
+          Preparing the journey
+        </p>
+        <button id="retry" hidden>Try again</button>
+        <noscript>This journey needs JavaScript enabled.</noscript>
+      </div>
+      <output id="geo-status" hidden aria-live="polite"
+        >Connecting to Japan’s landscape…</output
+      >
+      <div id="map-credits"></div>
+    </main>
+    <script type="module" src="/src/bootstrap.ts"></script>
+  </body>
+</html>

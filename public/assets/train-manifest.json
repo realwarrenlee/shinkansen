@@ -1,0 +1,13 @@
+{
+  "lead": "supplied-lead.glb",
+  "tail": "supplied-tail.glb",
+  "middle": "supplied-middle.glb",
+  "pantograph": "supplied-pantograph.glb",
+  "pantographCars": [3, 7],
+  "cars": 10,
+  "length": 25,
+  "endLength": 26.5,
+  "scale": 1,
+  "verticalOffset": 0.08,
+  "source": "User-supplied Shinkansen OBJ, prepared in Blender as ten cars with restored materials; original author and license not supplied"
+}
