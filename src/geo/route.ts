@@ -24,10 +24,12 @@ export class GeoRoute {
   samples: RouteSample[] = [];
   start = 0;
   length = 0;
+  trackStart = 0;
+  trackEnd = 0;
   constructor(coordinates: Coordinate[]) {
-    // Source is westbound; present this short journey eastbound from Shin-Fuji.
+    // Keep the surrounding alignment so the ride is a section of a continuing railway.
     const points = coordinates
-      .filter((p) => p[0] > 138.655 && p[0] < 138.724)
+      .filter((p) => p[0] > 138.63 && p[0] < 138.75)
       .sort((a, b) => a[0] - b[0]);
     if (points.length < 3)
       throw new Error("Shin-Fuji route coordinates are missing.");
@@ -54,7 +56,11 @@ export class GeoRoute {
       0,
     );
     this.start = this.samples[index].distance;
-    this.length = this.samples.at(-1)!.distance - this.start - 50;
+    const rideEnd = this.samples.filter((s) => s.longitude < 138.724).at(-1)!;
+    this.length = rideEnd.distance - this.start - 50;
+    // Leave a small sampling margin for headings at the physical track boundaries.
+    this.trackStart = -this.start + 12;
+    this.trackEnd = this.samples.at(-1)!.distance - this.start - 12;
   }
   at(distance: number): RouteSample {
     const d = CM.clamp(distance + this.start, 0, this.samples.at(-1)!.distance);

@@ -5,7 +5,8 @@ export class JourneyAudio {
   filter: BiquadFilterNode | null = null;
   source: AudioBufferSourceNode | null = null;
   enabled = false;
-  async toggle() {
+  async enable() {
+    this.enabled = true;
     if (!this.context) {
       this.context = new AudioContext();
       const length = this.context.sampleRate * 3;
@@ -17,7 +18,12 @@ export class JourneyAudio {
       this.gain = this.context.createGain(); this.gain.gain.value = 0;
       this.source.connect(this.filter).connect(this.gain).connect(this.context.destination);this.source.start();
     }
-    await this.context.resume(); this.enabled = !this.enabled; return this.enabled;
+    await this.context.resume();
+  }
+  async toggle() {
+    if (this.enabled) this.enabled = false;
+    else await this.enable();
+    return this.enabled;
   }
   update(speed:number,muted:boolean,tunnel:boolean) {
     if (!this.context || !this.gain || !this.filter) return;

@@ -51,10 +51,11 @@ function volume(
 }
 export function createRailway(viewer: Viewer, route: GeoRoute) {
   const sides = [0, 4.3],
-    count = Math.ceil((route.length + 500) / 12);
+    span = route.trackEnd - route.trackStart,
+    count = Math.ceil(span / 12);
   const points = (side: number, up: number) =>
     Array.from({ length: count + 1 }, (_, i) =>
-      route.local(-410 + ((route.length + 500) * i) / count, 0, side, up),
+      route.local(route.trackStart + (span * i) / count, 0, side, up),
     );
   volume(
     viewer,
@@ -104,7 +105,7 @@ export function createRailway(viewer: Viewer, route: GeoRoute) {
     );
   const piers: GeometryInstance[] = [],
     poles: GeometryInstance[] = [];
-  for (let d = -400; d < route.length + 80; d += 32) {
+  for (let d = route.trackStart; d < route.trackEnd; d += 32) {
     piers.push(
       new GeometryInstance({
         geometry: new CylinderGeometry({

@@ -28,10 +28,6 @@ const icons = {
   play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>',
   pause:
     '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg>',
-  sound:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 8q4 4 0 8M20 5q6 7 0 14" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  muted:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 const chapterPositions = [0, 0.22, 0.45, 0.68, 0.93];
 el("scene").setAttribute(
@@ -39,7 +35,6 @@ el("scene").setAttribute(
   "Real Fuji City terrain, aerial imagery, and buildings with an animated Shinkansen model",
 );
 el("play").innerHTML = icons.pause;
-el("sound").innerHTML = icons.muted;
 let viewer: Viewer,
   route: GeoRoute,
   motion: Motion,
@@ -62,6 +57,14 @@ let reduced = reducedQuery.matches;
 const controller = new AbortController();
 const listen = (target: EventTarget, type: string, fn: EventListener) =>
   target.addEventListener(type, fn, { signal: controller.signal });
+// Try autoplay, then unlock Web Audio on a gesture when the browser requires it.
+function enableAudio() {
+  if (audio.context?.state === "running") return;
+  void audio.enable().catch(() => {});
+}
+enableAudio();
+listen(window, "pointerdown", enableAudio);
+listen(window, "keydown", enableAudio);
 function notice(text: string) {
   el("notice").textContent = text;
   el("notice").classList.add("visible");
@@ -270,19 +273,6 @@ async function start() {
     listen(window, "resize", () => {
       qualityUpdate();
       rig.settled = false;
-    });
-    listen(el("sound"), "click", () => {
-      void audio
-        .toggle()
-        .then((enabled) => {
-          el("sound").innerHTML = enabled ? icons.sound : icons.muted;
-          el("sound").setAttribute("aria-pressed", String(enabled));
-          el("sound").setAttribute(
-            "aria-label",
-            enabled ? "Mute sound" : "Enable sound",
-          );
-        })
-        .catch(() => notice("Sound is unavailable."));
     });
     listen(window, "keydown", (event) => {
       const e = event as KeyboardEvent;
